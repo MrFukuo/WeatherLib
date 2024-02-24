@@ -45,8 +45,10 @@ function WeatherHandler:init(typer, sfx, child, intensity, overlay)
     self.pause = false
 
     self.haveoverlay = overlay
-    if self.haveoverlay then self:addOverlay() end
+    if self.haveoverlay and not self.skip then self:postInit() end
 end
+
+function WeatherHandler:postInit() self:addOverlay() end
 
 function WeatherHandler:update()
     super.update(self)

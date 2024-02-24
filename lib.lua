@@ -131,7 +131,7 @@ function WeatherLib:init()
             end
             
             for i, typ in ipairs (typer) do
-                print(typ)
+                --print(typ)
                 local w
                 local possible_types_again = {
                     "rain",
@@ -149,7 +149,7 @@ function WeatherLib:init()
                 }
                 if Utils.containsValue(possible_types_again, typ[1]) then
                     w = Game.stage:addChild(WeatherHandler(typ[1], sfx, addto, typ[2], haveoverlay))
-                    print("A", typ[1])
+                    --print("A", typ[1])
                 else
                     local b = WeatherRegistry.createWeatherData(typ[1], sfx, addto, typ[2], haveoverlay)
 
