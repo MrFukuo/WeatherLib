@@ -6,8 +6,8 @@ local FlippedRain, super = Class("CustomWeatherHandler", "flipped_rain") -- the 
 function FlippedRain:init(sfx, child, intensity, overlay)
 
     super.init(self, self.id, sfx, child, intensity, overlay, FlippedRainOverlay(self))
-    -- INITIAL STUFF
 
+    self.thres = {1, 6}
     if self.sfx then self.weathersounds:play("light_rain", 2, 1) end
     
 end

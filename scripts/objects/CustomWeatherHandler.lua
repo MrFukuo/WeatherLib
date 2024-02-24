@@ -8,7 +8,7 @@ function CustomWeatherHandler:init(type, sfx, parent, intensity, overlay, obj)
 
     -- TIMERS
     self.timer = 0
-    self.thres = {1, 6}
+    self.thres = {0, 0}
     self.multiplier = intensity
     self.overlay = obj
     --print('child', parent)
