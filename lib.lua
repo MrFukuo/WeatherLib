@@ -2,6 +2,8 @@ WeatherLib = {}
 
 function WeatherLib:init()
 
+    self.pp = false
+
     WeatherRegistry.init()
 
     Utils.hook(Stage, "setWeather", function(orig, self, typer, keep, sfx, addto)
@@ -281,6 +283,25 @@ function WeatherLib:init()
         end end
     end)
 
+    Utils.hook(Stage,  "getWeathers", function(orig, self, item)
+        orig(self, item)
+        if item == nil then item = "object" end
+        
+        local function valid(string)
+            if string ~= "object" and string ~= "type" then return false else return true end
+        end
+
+        if type(item) ~= "string" or not valid(item) then error("WEATHERLIB: argument must be a valid string. arguments include:\n[color:red]\"object\", \"type\"") return end
+
+        local tbl = {}
+        for _, weather in ipairs(self.weather) do
+            if item == "object" then table.insert(tbl, weather)
+                elseif item == "type" then table.insert(tbl, weather.type) end
+        end
+
+        return tbl
+    end)
+
     Utils.hook(Sprite, "drawAlpha", function(orig, self, alpha)
         local r,g,b,a = self:getDrawColor()
         a = alpha
@@ -351,14 +372,14 @@ function WeatherLib:init()
         local weather = Game.stage.last_weather
 
         Game.stage.overlay = {}
-        if Game.stage.keep_weather then
-            if self.map.inside or self.map.data.properties["inside"] then
-                Game.stage:pauseWeather("inside")
-            else
-                if Game.stage.pause_reason == "inside" then Game.stage:playWeather() end
-            end
-            --Game.stage:addWeatherOverlays()
+
+        if self.map.inside or self.map.data.properties["inside"] then
+            Game.stage:pauseWeather("inside")
         else
+            if Game.stage.pause_reason == "inside" then Game.stage:playWeather() Game.stage.wpaused = false print("played") end
+        end
+
+        if not Game.stage.keep_weather then
             Game.stage:resetWeather()
         end
     end)
@@ -489,6 +510,11 @@ function WeatherLib:postInit()
     if weather then
         Game.stage:setWeather(weather[1], weather[2], weather[3], Game.stage:getWeatherParent())
     end
+end
+
+function WeatherLib:postUpdate()
+    if Input.pressed("v") then self.pp = not self.pp end
+    if self.pp then Game.world.player:move(2, 0) end
 end
 
 return WeatherLib

@@ -1,7 +1,7 @@
 
 -- CUSTOM WEATHER PIECE "TUTORIAL"
 
-local FlippedRainPiece, super = Class("WeatherPiece")
+local FlippedRainPiece, super = Class("CustomWeatherPiece")
 
 function FlippedRainPiece:init(path, sprite, x, y, speed, handler)
     super.init(self, path, sprite, x, y, speed, handler)
@@ -14,9 +14,9 @@ function FlippedRainPiece:init(path, sprite, x, y, speed, handler)
     self:setPosition(self.x, self.y - (self.sprite.height * 2))
     
     self.blend_mode = "add"
-    self.alpha = 0.4
+    self.alpha = 0.8
 
-    self.offscreen_sides = {"bottom", "left"} -- the sides of the screen where the weather piece is considered "offscreen"
+    self.offscreen_sides = {"bottom", "right"} -- the sides of the screen where the weather piece is considered "offscreen"
 end
 
 function FlippedRainPiece:handleMovement()

@@ -41,6 +41,10 @@ function CustomWeatherOverlay:draw()
         end
     end
 
+    if not Game.stage.wpaused then self:drawOverlay() end
+
 end
+
+function CustomWeatherOverlay:drawOverlay() end
 
 return CustomWeatherOverlay

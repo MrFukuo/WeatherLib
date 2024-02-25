@@ -1,9 +1,9 @@
 
 
 
-local WeatherPiece, super = Class("Object")
+local CustomWeatherPiece, super = Class("Object")
 
-function WeatherPiece:init(path, sprite, x, y, speed, handler)
+function CustomWeatherPiece:init(path, sprite, x, y, speed, handler)
     super.init(self)
 
     self:setPosition(x, y)
@@ -29,7 +29,7 @@ function WeatherPiece:init(path, sprite, x, y, speed, handler)
     self.offscreen_sides = {} -- top, bottom, left, right (strings). the sides of the screen where the weather piece goes "offscreen"
 end
 
-function WeatherPiece:update()
+function CustomWeatherPiece:update()
     super.update(self)
 
     if self.handler.addto == Game.world then
@@ -59,9 +59,9 @@ function WeatherPiece:update()
     self:isOffscreen(self.offscreen_sides)
 end
 
-function WeatherPiece:handleMovement(x, y, initx, inity) end
+function CustomWeatherPiece:handleMovement(x, y, initx, inity) end
 
-function WeatherPiece:isOffscreen(sides)
+function CustomWeatherPiece:isOffscreen(sides)
 
     if type(sides) == "string" then sides = {sides} end
 
@@ -90,29 +90,29 @@ function WeatherPiece:isOffscreen(sides)
     for side, bool in pairs(types) do
 
         if side == "top" and bool then
-            if y < y1 then self:onOffscreen() --[[print("t")]] end
+            if y < y1 - (self.sprite.height * self.sprite.scale_y) then self:onOffscreen() --[[print("t")]] end
         end
 
         if side == "bottom" and bool then
-            if y > y2 then self:onOffscreen() --[[print("b")]] end
+            if y > y2 + (self.sprite.height * self.sprite.scale_y) then self:onOffscreen() --[[print("b")]] end
         end
 
         if side == "right" and bool then
-            if x > x1 then self:onOffscreen() --[[print("r")]] end
+            if x > x1 + (self.sprite.width * self.sprite.scale_x) then self:onOffscreen() --[[print("r")]] end
         end
 
         if side == "left" and bool then
-            if x < x2 then self:onOffscreen() --[[print("l")]] end
+            if x < x2 - (self.sprite.width * self.sprite.scale_x) then self:onOffscreen() --[[print("l")]] end
         end
 
     end
 end
 
-function WeatherPiece:onOffscreen()
+function CustomWeatherPiece:onOffscreen()
     self:remove()
 end
 
-function WeatherPiece:draw()
+function CustomWeatherPiece:draw()
     super.draw(self)
 
     Draw.setColor(1, 1, 1, 0)
@@ -122,4 +122,4 @@ function WeatherPiece:draw()
     love.graphics.setBlendMode("alpha")
 end
 
-return WeatherPiece
+return CustomWeatherPiece

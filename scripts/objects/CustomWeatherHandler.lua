@@ -22,19 +22,19 @@ end
 function CustomWeatherHandler:update()
     super.super.update(self)
 
-    if not self.pause then -- for general purposes, it's "if not indoors then"
+    --if not self.pause then -- for general purposes, it's "if not indoors then"
         if self.type == self.id then
 
             if self.timer <= 0 then
 
                 self.timer = math.random(self.thres[1], self.thres[2])
-                self:onThreshold()
+                if not Game.stage.wpaused then self:onThreshold() else self:onThresholdIndoors() end
 
             end
             self.timer = self.timer - 1 * DTMULT * self.multiplier
             --print(self.fraintimer, self.fraintimerthres)
         end
-    end
+    --end
 
     if self.haveoverlay then
         local number = 0

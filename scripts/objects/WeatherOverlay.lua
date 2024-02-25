@@ -104,7 +104,7 @@ function WeatherOverlay:draw()
     end
 
     --if not Game.battle or (Game.battle and Game.battle.state ~= "TRANSITIONOUT") then
-        if not self.paused then
+        if not Game.stage.wpaused then
 
             if self.type == "rain" or self.type == "overcast" then
                 Draw.setColor((99 - dark)/255, (126 - dark)/255, (135 - dark)/255, 55/255)

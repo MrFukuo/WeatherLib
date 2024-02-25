@@ -56,7 +56,7 @@ function WeatherHandler:update()
         print(o.type, (o.handler.addto == Game.world and "World" or "Battle"))
     end end]]
 
-    if not self.pause then
+    if not Game.stage.wpaused then
         if self.type == "rain" or self.type == "thunder" or self.type == "cd" then
             if self.raintimerreset then
                 self.raintimerreset = false

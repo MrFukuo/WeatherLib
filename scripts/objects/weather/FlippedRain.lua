@@ -35,4 +35,8 @@ function FlippedRain:onThreshold()
     end
 end
 
+function FlippedRain:onThresholdIndoors()
+    self:onThreshold()
+end
+
 return FlippedRain
