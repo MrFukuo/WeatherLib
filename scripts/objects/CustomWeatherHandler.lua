@@ -16,7 +16,7 @@ function CustomWeatherHandler:init(type, sfx, parent, intensity, overlay, obj)
     if self.overlay then self:addOverlay() end
 
     -- MUSIC
-    if self.sfx then self.weathersounds:play("light_rain", 2, 1) end
+    if self.sfx then self:playAmbience("light_rain", 2, 1) end
 end
 
 function CustomWeatherHandler:update()
@@ -69,6 +69,14 @@ function CustomWeatherHandler:getPieceAmount(piece)
         if child:includes(piece) and child.handler == self then number = number + 1 end
     end
     return number
+end
+
+function CustomWeatherHandler:playAmbience(...)
+    if self.sfx then self.weathersounds:play(...) end
+end
+
+function CustomWeatherHandler:stopAndPlaySound(...)
+    if self.sfx then Assets.stopAndPlaySound(...) end
 end
 
 return CustomWeatherHandler

@@ -153,7 +153,7 @@ function WeatherHandler:update()
                 self.snowtimerreset = true
 
                 for i = self.snowcount, 1, -1 do
-                    local number = Utils.pick({"a", "b", "c", "d", "e"})
+                    local number = Utils.pick({"a", "b", "c", "d"})
                     local speed = Utils.clamp(Utils.random(Utils.round(3 * self.intensity), Utils.round(6 * self.intensity)), 3, 14)
                     local rotspeed = Utils.random(0.5, 6)
                     local sinerspeed = Utils.random(0.6, 4)
@@ -189,7 +189,7 @@ function WeatherHandler:update()
 
                     self.addto:addChild(ThunderFlash(self))
                     wait(0.5)
-                    Assets.stopAndPlaySound("thunder", 0.5, 0.6)
+                    if self.sfx then Assets.stopAndPlaySound("thunder", 0.5, 0.6) end
                 end)
                 --self.addto:addChild(ThunderFlash())
                 self.thundertimerreset = true
@@ -215,7 +215,7 @@ function WeatherHandler:update()
                 --print("WOO OHOOO WIND YESS!! IM SO HAPPY")
                 local ammount = math.random(1, 7)
                 for i = ammount, 1, -1 do
-                    Assets.stopAndPlaySound("wind", 0.8, 1.2)
+                    if self.sfx then Assets.stopAndPlaySound("wind", 0.8, 1.2) end
                     Game.stage.timer:script(function(wait)
                         wait(1.5)
                         local speed = Utils.random(15, 19)
@@ -272,7 +272,7 @@ function WeatherHandler:update()
             if self.thundertimer <= 0 then
                 Game.stage.timer:script(function(wait)
 
-                    Assets.stopAndPlaySound("thunder", 0.2, 0.3)
+                    if self.sfx then Assets.stopAndPlaySound("thunder", 0.2, 0.3) end
                 end)
                 --self.addto:addChild(ThunderFlash())
                 self.thundertimerreset = true
