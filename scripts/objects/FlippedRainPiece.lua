@@ -14,7 +14,7 @@ function FlippedRainPiece:init(path, sprite, x, y, speed, handler)
     self:setPosition(self.x, self.y - (self.sprite.height * 2))
     
     self.blend_mode = "add"
-    self.alpha = 0.8
+    self.alpha = 0.4
 
     self.offscreen_sides = {"bottom", "right"} -- the sides of the screen where the weather piece is considered "offscreen"
 end

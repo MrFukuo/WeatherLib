@@ -13,7 +13,7 @@ function CustomWeatherHandler:init(type, sfx, parent, intensity, overlay, obj)
     self.overlay = obj
     --print('child', parent)
     --print("ov", self.overlay)
-    if self.overlay then self:addOverlay() end
+    if self.overlay then self.initialoverlayed = true self:addOverlay() end
 
     -- MUSIC
     if self.sfx then self:playAmbience("light_rain", 2, 1) end
@@ -36,7 +36,7 @@ function CustomWeatherHandler:update()
         end
     --end
 
-    if self.haveoverlay then
+    if self.haveoverlay and self.initialoverlayed then
         local number = 0
         for i, overlay in ipairs(Game.stage.overlay) do
             if overlay[1] == self then number = 1 end

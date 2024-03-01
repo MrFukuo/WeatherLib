@@ -48,7 +48,7 @@ function WeatherHandler:init(typer, sfx, child, intensity, overlay)
     if self.haveoverlay and not self.skip then self:postInit() end
 end
 
-function WeatherHandler:postInit() self:addOverlay() end
+function WeatherHandler:postInit() self:addOverlay() self.initialoverlayed = true end
 
 function WeatherHandler:update()
     super.update(self)
@@ -282,7 +282,7 @@ function WeatherHandler:update()
         end
     end
 
-    if self.haveoverlay then
+    if self.haveoverlay  and self.initialoverlayed then
         local number = 0
         for i, overlay in ipairs(Game.stage.overlay) do
             if overlay[1] == self then number = 1 end

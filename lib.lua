@@ -2,8 +2,6 @@ WeatherLib = {}
 
 function WeatherLib:init()
 
-    self.pp = false
-
     WeatherRegistry.init()
 
     Utils.hook(Stage, "setWeather", function(orig, self, typer, keep, sfx, addto)
@@ -203,6 +201,20 @@ function WeatherLib:init()
         return false
     end)
 
+    Utils.hook(Stage, "setWeatherParent", function(orig, self, parent)
+
+        if not parent then parent = self:getWeatherParent() end
+
+        if Game.stage.weather and #Game.stage.weather > 0 then
+            if parent then
+                for i, w in ipairs(Game.stage.weather) do
+                    w.addto = parent
+                end
+                self.addto = parent
+            end
+        end
+    end)
+
     Utils.hook(Stage, "resetWeather", function(orig, self)
         self:setWeather()
     end)
@@ -354,19 +366,6 @@ function WeatherLib:init()
         Object.draw(self)
     end)
 
-    --[[Utils.hook(Map, "load", function(orig, self)
-        orig(self)
-        local weather = Game.stage.last_weather
-
-        if not Game.stage.keep_weather then Game.stage:resetWeather() end
-
-        if self.inside or self.data.properties["inside"] and Game.stage.keep_weather then
-            Game.stage:pauseWeather("inside")
-        else
-            if Game.stage.keep_weather and Game.stage.pause_reason == "inside" then Game.stage:playWeather() end
-        end
-    end)]]
-
     Utils.hook(World, "setupMap", function(orig, self, map, ...)
         orig(self, map, ...)
         local weather = Game.stage.last_weather
@@ -442,53 +441,16 @@ function WeatherLib:init()
             end
         end
     end)
-
-    --[[Utils.hook(Stage, "update", function(orig, self)
-        orig(self)
-        if Game.stage.overlay and #Game.stage.overlay > 1 then
-            local possible_types = {
-                "rain",
-                "thunder",
-                "snow",
-                "wind",
-                "volcanic",
-                "chilly",
-                "cloudy",
-                "overcast",
-                "dark_overcast",
-                "hot",
-                "cd",
-            }
-            local tabler = {}
-            for i = #possible_types, 1, -1 do
-                table.insert(tabler, 0)
-            end
-            for i, o in ipairs(Game.stage.overlay) do
-                for ir, pt in ipairs(possible_types) do
-                    if o.type == pt then tabler[ir] = tabler[ir] + 1 end
-                end
-            end
-            for i, numb in ipairs(tabler) do
-                if numb > 1 then
-                    for it, ov in ipairs(Game.stage.overlay) do
-                        if ov.type == possible_types[i] then
-                            ov:remove()
-                            break
-                        end
-                    end
-                end
-            end
-        end
-    end)]]
     
     Utils.hook(Battle, "postInit", function(orig, self, state, encounter)
         orig(self, state, encounter)
 
         if not self.encounter.background then if #Game.stage.weather > 0 then
             for i, w in ipairs(Game.stage.weather) do
-                w.addto = self end
+                w.addto = self
             end
-        end
+            Game.stage.addto = self
+        end end
     end)
 
     Utils.hook(Battle, "onStateChange", function(orig, self, old, new)
@@ -497,8 +459,9 @@ function WeatherLib:init()
         if new == "TRANSITIONOUT" then
             if not self.encounter.background then if #Game.stage.weather > 0 then
                 for i, w in ipairs(Game.stage.weather) do
-                    w.addto = Game.world end
-                end
+                    w.addto = Game.world
+                end end
+                Game.stage.addto = self
             end
         end
     end)
@@ -512,9 +475,34 @@ function WeatherLib:postInit()
     end
 end
 
-function WeatherLib:postUpdate()
-    if Input.pressed("v") then self.pp = not self.pp end
-    if self.pp then Game.world.player:move(2, 0) end
+------------------------------ function copies, made V1.1.0
+
+function WeatherLib:setWeather(...)
+    Game.stage:setWeather(...)
+end
+
+function WeatherLib:resetWeather(...)
+    Game.stage:resetWeather(...)
+end
+
+function WeatherLib:keepWeather(...)
+    Game.stage:keepWeather(...)
+end
+
+function WeatherLib:getWeathers(...)
+    return Game.stage:getWeathers(...)
+end
+
+function WeatherLib:hasWeather(...)
+    return Game.stage:hasWeather(...)
+end
+
+function WeatherLib:getWeatherParent(...)
+    return Game.stage:getWeatherParent(...)
+end
+
+function WeatherLib:setWeatherParent(...)
+    Game.stage:setWeatherParent(...)
 end
 
 return WeatherLib
