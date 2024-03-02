@@ -13,10 +13,15 @@ function SnowPiece:init(number, x, y, speed, rotspeed, sinerspeed, lifespan, han
     self.rotspeed = rotspeed or 0.2
     self.sinerspeed = sinerspeed or 1
     self.lifespan = lifespan
-    if handler.addto == Game.world then
-        self:setLayer(WORLD_LAYERS["below_ui"] - 1)
-    elseif handler.addto == Game.battle then
-        self:setLayer(BATTLE_LAYERS["below_ui"] - 1)
+
+    if not Game.stage.weather_layer then
+        if handler.addto == Game.world then
+            self:setLayer(WORLD_LAYERS["below_ui"] - 1)
+        elseif handler.addto == Game.battle then
+            self:setLayer(BATTLE_LAYERS["below_ui"] - 1)
+        end
+    else
+        self:setLayer(Game.stage.weather_layer - 1)
     end
 
     self.snowsprite = Sprite("world/snow/"..number)
@@ -35,27 +40,31 @@ end
 function SnowPiece:update()
     super.update(self)
 
-    if self.handler.addto == Game.world then
-        if self.parent ~= Game.world then
-            local newx, newy = self.parent:getRelativePos(self.x, self.y, Game.world)
-            self.parent:removeChild(self)
-            Game.world:addChild(self)
-            self:setPosition(newx, newy)
-        end
-        if self.layer ~= WORLD_LAYERS["below_ui"] - 1 then
-            self:setLayer(WORLD_LAYERS["below_ui"] - 1)
-        end
-    elseif self.handler.addto == Game.battle then
-        if self.parent ~= Game.battle then
-            local newx, newy = self.parent:getRelativePos(self.x, self.y, Game.battle)
-            self.parent:removeChild(self)
-            Game.battle:addChild(self)
-            self:setPosition(newx, newy)
-        end
+    if not Game.stage.weather_layer then
+        if self.handler.addto == Game.world then
+            if self.parent ~= Game.world then
+                local newx, newy = self.parent:getRelativePos(self.x, self.y, Game.world)
+                self.parent:removeChild(self)
+                Game.world:addChild(self)
+                self:setPosition(newx, newy)
+            end
+            if self.layer ~= WORLD_LAYERS["below_ui"] - 1 then
+                self:setLayer(WORLD_LAYERS["below_ui"] - 1)
+            end
+        elseif self.handler.addto == Game.battle then
+            if self.parent ~= Game.battle then
+                local newx, newy = self.parent:getRelativePos(self.x, self.y, Game.battle)
+                self.parent:removeChild(self)
+                Game.battle:addChild(self)
+                self:setPosition(newx, newy)
+            end
 
-        if self.layer ~= BATTLE_LAYERS["below_ui"] - 1 then
-            self:setLayer(BATTLE_LAYERS["below_ui"] - 1)
+            if self.layer ~= BATTLE_LAYERS["below_ui"] - 1 then
+                self:setLayer(BATTLE_LAYERS["below_ui"] - 1)
+            end
         end
+    else 
+        if self.layer ~= Game.stage.weather_layer - 1 then self:setLayer(Game.stage.weather_layer - 1) end
     end
 
     for i, p in ipairs(Game.stage.weather) do

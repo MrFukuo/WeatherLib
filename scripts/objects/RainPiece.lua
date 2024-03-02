@@ -26,27 +26,31 @@ end
 function RainPiece:update()
     super.update(self)
 
-    if self.handler.addto == Game.world then
-        if self.parent ~= Game.world then
-            local newx, newy = self.parent:getRelativePos(self.x, self.y, Game.world)
-            self.parent:removeChild(self)
-            Game.world:addChild(self)
-            self:setPosition(newx, newy)
-        end
-        if self.layer ~= WORLD_LAYERS["below_ui"] - 1 then
-            self:setLayer(WORLD_LAYERS["below_ui"] - 1)
-        end
-    elseif self.handler.addto == Game.battle then
-        if self.parent ~= Game.battle then
-            local newx, newy = self.parent:getRelativePos(self.x, self.y, Game.battle)
-            self.parent:removeChild(self)
-            Game.battle:addChild(self)
-            self:setPosition(newx, newy)
-        end
+    if not Game.stage.weather_layer then
+        if self.handler.addto == Game.world then
+            if self.parent ~= Game.world then
+                local newx, newy = self.parent:getRelativePos(self.x, self.y, Game.world)
+                self.parent:removeChild(self)
+                Game.world:addChild(self)
+                self:setPosition(newx, newy)
+            end
+            if self.layer ~= WORLD_LAYERS["below_ui"] - 1 then
+                self:setLayer(WORLD_LAYERS["below_ui"] - 1)
+            end
+        elseif self.handler.addto == Game.battle then
+            if self.parent ~= Game.battle then
+                local newx, newy = self.parent:getRelativePos(self.x, self.y, Game.battle)
+                self.parent:removeChild(self)
+                Game.battle:addChild(self)
+                self:setPosition(newx, newy)
+            end
 
-        if self.layer ~= BATTLE_LAYERS["below_ui"] - 1 then
-            self:setLayer(BATTLE_LAYERS["below_ui"] - 1)
+            if self.layer ~= BATTLE_LAYERS["below_ui"] - 1 then
+                self:setLayer(BATTLE_LAYERS["below_ui"] - 1)
+            end
         end
+    else 
+        if self.layer ~= Game.stage.weather_layer - 1 then self:setLayer(Game.stage.weather_layer - 1) end
     end
     
     self.x, self.y = self.x - self.speed * 0.5 * DTMULT, self.y + self.speed * DTMULT

@@ -16,12 +16,12 @@ function WeatherLib:init()
             "thunder",
             "snow",
             "wind",
-            "volcanic",
+            --"volcanic",
             "chilly",
             "cloudy",
             "overcast",
             "dark_overcast",
-            "hot",
+            --"hot",
             "clear",
             "cd",
         }
@@ -213,6 +213,18 @@ function WeatherLib:init()
                 self.addto = parent
             end
         end
+    end)
+
+    Utils.hook(Stage, "setWeatherLayer", function(orig, self, layer)
+        self.weather_layer = layer and layer + 1 or nil
+    end)
+
+    Utils.hook(Stage, "resetWeatherLayer", function(orig, self, layer)
+        self.weather_layer = nil
+    end)
+
+    Utils.hook(Stage, "getWeatherLayer", function(orig, self, layer)
+        return self.weather_layer
     end)
 
     Utils.hook(Stage, "resetWeather", function(orig, self)
@@ -475,7 +487,7 @@ function WeatherLib:postInit()
     end
 end
 
------------------------------- function copies, made V1.1.0
+------------------------------ function copies, added V1.1.0
 
 function WeatherLib:setWeather(...)
     Game.stage:setWeather(...)
@@ -503,6 +515,18 @@ end
 
 function WeatherLib:setWeatherParent(...)
     Game.stage:setWeatherParent(...)
+end
+
+function WeatherLib:setWeatherLayer(...)
+    Game.stage:setWeatherLayer(...)
+end
+
+function WeatherLib:resetWeatherLayer(...)
+    Game.stage:resetWeatherLayer(...)
+end
+
+function WeatherLib:getWeatherLayer(...)
+    Game.stage:getWeatherLayer(...)
 end
 
 return WeatherLib

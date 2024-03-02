@@ -5,10 +5,14 @@ function CustomWeatherOverlay:init(handler)
     self.type = handler.type
     self.parallax_x, self.parallax_y = 0, 0
     self.handler = handler
-    if handler.addto == Game.world then
-        self:setLayer(WORLD_LAYERS["below_ui"])
-    elseif handler.addto == Game.battle then
-        self:setLayer(BATTLE_LAYERS["below_ui"])
+    if not Game.stage.weather_layer then
+        if handler.addto == Game.world then
+            self:setLayer(WORLD_LAYERS["below_ui"])
+        elseif handler.addto == Game.battle then
+            self:setLayer(BATTLE_LAYERS["below_ui"])
+        end
+    else
+        self:setLayer(Game.stage.weather_layer)
     end
     self.paused = false
     if self.handler.pause then self.paused = true self.pause = true end
@@ -18,27 +22,31 @@ end
 function CustomWeatherOverlay:draw()
     super.draw(self)
 
-    if self.handler.addto == Game.world then
-        if self.parent ~= Game.world then
-            --local newx, newy = self.parent:getRelativePos(self.x, self.y, Game.world)
-            self.parent:removeChild(self)
-            Game.world:addChild(self)
-            --self:setPosition(newx, newy)
-        end
-        if self.layer ~= WORLD_LAYERS["below_ui"] then
-            self:setLayer(WORLD_LAYERS["below_ui"])
-        end
-    elseif self.handler.addto == Game.battle then
-        if self.parent ~= Game.battle then
-            --local newx, newy = self.parent:getRelativePos(self.x, self.y, Game.battle)
-            self.parent:removeChild(self)
-            Game.battle:addChild(self)
-            --self:setPosition(newx, newy)
-        end
+    if not Game.stage.weather_layer then
+        if self.handler.addto == Game.world then
+            if self.parent ~= Game.world then
+                --local newx, newy = self.parent:getRelativePos(self.x, self.y, Game.world)
+                self.parent:removeChild(self)
+                Game.world:addChild(self)
+                --self:setPosition(newx, newy)
+            end
+            if self.layer ~= WORLD_LAYERS["below_ui"] then
+                self:setLayer(WORLD_LAYERS["below_ui"])
+            end
+        elseif self.handler.addto == Game.battle then
+            if self.parent ~= Game.battle then
+                --local newx, newy = self.parent:getRelativePos(self.x, self.y, Game.battle)
+                self.parent:removeChild(self)
+                Game.battle:addChild(self)
+                --self:setPosition(newx, newy)
+            end
 
-        if self.layer ~= BATTLE_LAYERS["below_ui"] then
-            self:setLayer(BATTLE_LAYERS["below_ui"])
+            if self.layer ~= BATTLE_LAYERS["below_ui"] then
+                self:setLayer(BATTLE_LAYERS["below_ui"])
+            end
         end
+    else
+        if self.layer ~= Game.stage.weather_layer then self:setLayer(Game.stage.weather_layer) end
     end
 
     if not Game.stage.wpaused then self:drawOverlay() end

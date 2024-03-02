@@ -5,7 +5,6 @@ local FlippedRainPiece, super = Class("CustomWeatherPiece")
 
 function FlippedRainPiece:init(path, sprite, x, y, speed, handler)
     super.init(self, path, sprite, x, y, speed, handler)
-    --super:init()
 
     self.sprite = Sprite(path.."/"..sprite)
     self.sprite:setScale(2)

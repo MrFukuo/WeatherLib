@@ -4,10 +4,14 @@ function ThunderFlash:init(handler)
     super.init(self)
     self.parallax_x, self.parallax_y = 0, 0
     self.flashtimer, self.flashtime = 20, 30
-    if handler.addto == Game.world then
-        self:setLayer(WORLD_LAYERS["below_ui"] + 1)
-    elseif handler.addto == Game.battle then
-        self:setLayer(BATTLE_LAYERS["below_ui"] + 1)
+    if not Game.stage.weather_layer then
+        if handler.addto == Game.world then
+            self:setLayer(WORLD_LAYERS["below_ui"] + 1)
+        elseif handler.addto == Game.battle then
+            self:setLayer(BATTLE_LAYERS["below_ui"] + 1)
+        end
+    else
+        self:setLayer(Game.stage.weather_layer + 1)
     end
 end
 
